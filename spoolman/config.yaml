@@ -1,5 +1,5 @@
 name: "Spoolman Server"
-version: 0.16.1
+version: 0.18.1
 description: "Run the latest stable version of Spoolman."
 url: "https://github.com/donkie/spoolman"
 slug: "spoolman"
@@ -20,4 +20,3 @@ boot: auto
 ports:
   8000/tcp: 8000
 image: ghcr.io/donkie/spoolman
-version: 0.16.1
