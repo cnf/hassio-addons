@@ -17,4 +17,4 @@ webui: "[PROTO:option_name]://[HOST]:[PORT:8056]"
 boot: auto
 ports:
   8056/tcp: 80
-image: ghcr.io/fluidd-core/fluidd:v1.31.0
+image: ghcr.io/fluidd-core/fluidd
