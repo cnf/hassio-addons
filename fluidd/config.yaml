@@ -16,5 +16,5 @@ webui: "[PROTO:option_name]://[HOST]:[PORT:8056]"
 #   - addon_config:rw
 boot: auto
 ports:
-  8056/tcp: 80
+  80/tcp: 8056
 image: ghcr.io/fluidd-core/fluidd
