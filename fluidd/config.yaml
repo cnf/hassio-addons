@@ -1,0 +1,20 @@
+name: "Fluidd"
+version: 1.31.0
+description: "Locally hosted Fluidd"
+url: "https://github.com/fluidd-core/fluidd/"
+slug: "fluidd"
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armv7
+startup: application
+udev: true
+webui: "[PROTO:option_name]://[HOST]:[PORT:8056]"
+# map:
+#   # - config:rw
+#   - addon_config:rw
+boot: auto
+ports:
+  8056/tcp: 80
+image: ghcr.io/fluidd-core/fluidd:v1.31.0
