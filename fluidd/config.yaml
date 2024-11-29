@@ -1,5 +1,5 @@
 name: "Fluidd"
-version: 1.31.0
+version: v1.31.0
 description: "Locally hosted Fluidd"
 url: "https://github.com/fluidd-core/fluidd/"
 slug: "fluidd"
