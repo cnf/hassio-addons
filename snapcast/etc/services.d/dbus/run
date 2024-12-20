@@ -2,4 +2,4 @@
 
 bashio::log.info "Starting DBUS Daemon..."
 exec 2>&1
-exec dbus-daemon --nofork --session
+exec dbus-daemon --nofork --session --print-address

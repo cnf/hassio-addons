@@ -3,6 +3,9 @@
 mkdir -p /share/snapfifo
 mkdir -p /share/snapcast
 
+# Prepare dbus-daemon environment
+dbus-uuidgen --ensure
+
 declare spot_src_name
 declare spot_dev_name
 declare spot_brt
