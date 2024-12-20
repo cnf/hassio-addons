@@ -1,0 +1,136 @@
+name: "Snapcast Server"
+version: dev
+description: "A Snapcast Server with Spotify and Airplay"
+url: "https://github.com/badaix/snapcast"
+slug: "snapserver"
+arch:
+  - aarch64
+  - amd64
+  - armv7
+startup: application
+# udev: true
+init: false
+webui: "[PROTO:option_name]://[HOST]:[PORT:1780]"
+map:
+  - addon_config:rw
+  - data:rw
+audio: true
+boot: auto
+host_network: true
+ports:
+  1704/tcp: 1704
+  1705/tcp: 1705
+  1780/tcp: 1780
+  4953/tcp: 4953
+ports-description:
+  1704/tcp: "Client communcations"
+  1705/tcp: "JSON-RPC API"
+  1780/tcp: "WebUI"
+  4953/tcp: "TCP Stream target"
+# options:
+# schema:
+# journald: true
+options:
+  spotify_enabled: 1
+  spotify_source_name: "Spotify"
+  spotify_device_name: "Snapcast"
+  spotify_bitrate: 320
+  airplay_enabled: 1
+  airplay_source_name: "Airplay"
+  airplay_device_name: "Snapcast"
+  pipe_enabled: 1
+  pipe_source_name: "Pipe"
+  tcp_stream_enabled: 1
+  tcp_stream_source_name: "Snapper"
+  meta_source_enabled: 1
+  meta_sources: "Spotify/Airplay/Snapper/Pipe"
+  meta_source_name: "Mix"
+  source_custom: ""
+  # streams: "source = spotify:///librespot?name=Spotify&bitrate=320"
+  buffer: 1000
+  codec: "flac"
+  send_to_muted: "false"
+  sampleformat: "48000:16:2"
+  http_enabled: "true"
+  tcp_enabled: "true"
+  logging_enabled: "true"
+  server_threads: -1
+  server_datadir: "/usr/share/snapserver/snapweb"
+  initial_volume: 100
+schema:
+  spotify_enabled: bool
+  spotify_source_name: str
+  spotify_device_name: str
+  spotify_bitrate: int
+  airplay_enabled: bool
+  airplay_source_name: str
+  airplay_device_name: str
+  pipe_enabled: bool
+  pipe_source_name: str
+  tcp_stream_enabled: bool
+  tcp_stream_source_name: str
+  meta_source_enabled: bool
+  meta_sources: str
+  meta_source_name: str
+  source_custom: str?
+  buffer: int
+  codec: str
+  send_to_muted: str
+  sampleformat: str
+  http_enabled: str
+  tcp_enabled: str
+  logging_enabled: str
+  server_threads: int
+  server_datadir: str
+  initial_volume: int
+
+
+
+# ---
+# ---
+# name: snapcast-server
+# version: dev
+# slug: snapcastserver
+# description: Create a snapcast server
+# url: https://github.com/Art-Ev/addon-snapserver
+# codenotary: arthur@evrard.dev
+# arch:
+#   - aarch64
+#   - amd64
+#   - armv7
+#   - i386
+# host_network: true
+# map: ["share:rw"]
+# audio: true
+# init: false
+# options:
+#   streams: "source = spotify:///librespot?name=Spotify&bitrate=320"
+#   buffer: 1000
+#   codec: "flac"
+#   send_to_muted: "false"
+#   sampleformat: "48000:16:2"
+#   http_enabled: "true"
+#   tcp_enabled: "true"
+#   logging_enabled: "true"
+#   server_threads: -1
+#   server_datadir: "/usr/share/snapserver/snapweb"
+#   initial_volume: 100
+# schema:
+#   streams: str
+#   buffer: int
+#   codec: str
+#   send_to_muted: str
+#   sampleformat: str
+#   http_enabled: str
+#   tcp_enabled: str
+#   logging_enabled: str
+#   server_threads: int
+#   server_datadir: str
+#   initial_volume: int
+#   stream_bis: str?
+#   stream_ter: str?
+# ports:
+#   1704/tcp: 1704
+#   1705/tcp: 1705
+#   1780/tcp: 1780
+#   4953/tcp: 4953

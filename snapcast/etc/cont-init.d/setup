@@ -1,0 +1,117 @@
+#!/usr/bin/env bashio
+
+mkdir -p /share/snapfifo
+mkdir -p /share/snapcast
+
+declare spot_src_name
+declare spot_dev_name
+declare spot_brt
+declare airp_src_name
+declare airp_dev_name
+declare airp_port
+declare pipe_path
+declare pipe_src_name
+declare pipe_mode
+declare tcp_stream_src_name
+declare tcp_stream_port
+declare source_custom
+declare meta_name
+declare meta_string
+declare buffer
+declare codec
+declare muted
+declare sampleformat
+declare http
+declare tcp
+declare logging
+declare threads
+declare datadir
+
+config=/etc/snapserver.conf
+
+if ! bashio::fs.file_exists '/etc/snapserver.conf'; then
+    touch /etc/snapserver.conf ||
+        bashio::exit.nok "Could not create snapserver.conf file on filesystem"
+fi
+bashio::log.info "Populating snapserver.conf..."
+
+echo "[stream]" > "${config}"
+# Streams
+if bashio::config.true 'spotify_enabled'; then
+    spot_src_name=$(bashio::config 'spotify_source_name' 'Spotify')
+    spot_dev_name=$(bashio::config 'spotify_device_name' 'Snapcast')
+    spot_brt=$(bashio::config 'spotify_bitrate' 320)
+    echo "source = spotify:///librespot?name=${spot_src_name}&devicename=${spot_dev_name}&bitrate=${spot_brt}" >> "${config}"
+fi
+if bashio::config.true 'airplay_enabled'; then
+    airp_src_name=$(bashio::config 'airplay_source_name' 'Airplay')
+    airp_dev_name=$(bashio::config 'airplay_device_name' 'Snapcast')
+    airp_port=5000
+    echo "source = airplay:///shairport-sync?name=${airp_src_name}&port=${airp_port}&devicename=${airp_dev_name}" >> "${config}"
+fi
+if bashio::config.true 'pipe_enabled'; then
+    pipe_path="/share/snapfifo/snapfifo"
+    pipe_src_name=$(bashio::config 'pipe_source_name' 'Pipe')
+    pipe_mode='create'
+    echo "source = pipe://${pipe_path}?name=${pipe_src_name}&mode=${pipe_mode}" >> "${config}"
+fi
+if bashio::config.true 'tcp_stream_enabled';then
+    tcp_stream_src_name=$(bashio::config 'tcp_stream_name' 'Snapper')
+    tcp_stream_port=$(bashio::config 'tcp_stream_port' 4953)
+    echo "source = tcp://0.0.0.0:${tcp_stream_port}?name=${tcp_stream_src_name}" >> "${config}"
+fi
+if bashio::config.has_value 'source_custom'; then
+    source_custom=$(bashio::config 'source_custom')
+    echo "${source_custom}" >> "${config}"
+fi
+if bashio::config.true 'meta_source_enabled'; then
+    meta_string=$(bashio::config 'meta_sources')
+    meta_name=$(bashio::config 'meta_source_name')
+    echo "source = meta:///${meta_string}?name=${meta_name}" >> "${config}"
+fi
+
+# Buffer
+buffer=$(bashio::config 'buffer')
+echo "buffer = ${buffer}" >> "${config}"
+# Codec
+codec=$(bashio::config 'codec')
+echo "codec = ${codec}" >> "${config}"
+# Muted
+muted=$(bashio::config 'send_to_muted')
+echo "send_to_muted = ${muted}" >> "${config}"
+# Sampleformat
+sampleformat=$(bashio::config 'sampleformat')
+echo "sampleformat = ${sampleformat}" >> "${config}"
+
+# Http
+http=$(bashio::config 'http_enabled')
+echo "[http]" >> "${config}"
+echo "enabled = ${http}" >> "${config}"
+echo "bind_to_address = ::" >> "${config}"
+# Datadir
+datadir=$(bashio::config 'server_datadir')
+echo "doc_root = ${datadir}" >> "${config}"
+# TCP
+
+echo "[tcp]" >> "${config}"
+tcp=$(bashio::config 'tcp_enabled')
+echo "enabled = ${tcp}" >> "${config}"
+
+# Logging
+echo "[logging]" >> "${config}"
+logging=$(bashio::config 'logging_enabled')
+echo "debug = ${logging}" >> "${config}"
+
+# Threads
+echo "[server]" >> "${config}"
+threads=$(bashio::config 'server_threads')
+echo "threads = ${threads}" >> "${config}"
+
+# streaming client
+echo "[streaming_client]" >> "${config}"
+initial_volume=$(bashio::config 'initial_volume')
+echo "initial_volume = ${initial_volume}" >> "${config}"
+
+cat ${config}
+
+bashio::log.info "Populated snapserver.conf..."

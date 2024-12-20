@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv bashio
+
+bashio::log.info "Starting DBUS Daemon..."
+exec 2>&1
+exec dbus-daemon --session

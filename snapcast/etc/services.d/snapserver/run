@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv bashio
+
+bashio::log.info "Starting Snapcast Server..."
+exec 2>&1
+exec snapserver -c /etc/snapserver.conf --server.datadir=/app/data
