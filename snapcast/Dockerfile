@@ -23,48 +23,50 @@ FROM snapcast AS snapcast-airport
 ARG AIRPLAY_VERSION
 ENV BUILD_AIRPLAY_VERSION "${AIRPLAY_VERSION:-1}"
 
-RUN apk add --no-cache dbus popt openssl soxr avahi libconfig glib \
-  && apk add --no-cache --upgrade --virtual .build-deps git build-base autoconf automake libtool popt-dev openssl-dev soxr-dev avahi-dev libconfig-dev glib-dev \
-  && mkdir -p /app/build \
-  && CONF_OPTIONS="\
-      --with-stdout \
-      --with-dbus-interface \
-      --with-avahi \
-      --with-ssl=openssl \
-      --with-soxr \
-      --with-metadata" \
-  #
-  # Airplay-2 support: If enabled, add and build its dependencies
-  && if [ "${BUILD_AIRPLAY_VERSION}" -eq 2 ]; then \
-    CONF_OPTIONS="${CONF_OPTIONS} --with-airplay-2" \
-    && apk add --no-cache --upgrade ffmpeg libplist libsodium libgcrypt libuuid \
-    && apk add --no-cache --upgrade --virtual .build-deps-airplay2 ffmpeg-dev libplist-dev libsodium-dev libgcrypt-dev xxd \
-    && cd /app/build \
-    && git clone https://github.com/mikebrady/nqptp.git nqptp.git \
-    && cd nqptp.git \
-    && autoreconf -fi \
-    && ./configure \
-    && make \
-    && make install \
-  ; fi \
-  #
-  # Build shairport-sync with metadata, stdout and pipe support (apk repo is without)
-  && cd /app/build \
-  && git clone https://github.com/mikebrady/shairport-sync.git shairport-sync.git \
-  && cd shairport-sync.git \
-  && autoreconf -i -f \
-  && ./configure ${CONF_OPTIONS} \
-  && make \
-  && make install \
-  #
-  # Cleanup build environment
-  && apk del --purge .build-deps \
-  && if [ "${BUILD_AIRPLAY_VERSION}" -eq 2 ]; then apk del --purge .build-deps-airplay2; fi \
-  && rm -rf /app/build \
+RUN apk add --no-cache dbus avahi shairport-sync
+
+# RUN apk add --no-cache dbus popt openssl soxr avahi libconfig glib \
+#   && apk add --no-cache --upgrade --virtual .build-deps git build-base autoconf automake libtool popt-dev openssl-dev soxr-dev avahi-dev libconfig-dev glib-dev \
+#   && mkdir -p /app/build \
+#   && CONF_OPTIONS="\
+#       --with-stdout \
+#       --with-dbus-interface \
+#       --with-avahi \
+#       --with-ssl=openssl \
+#       --with-soxr \
+#       --with-metadata" \
+#   #
+#   # Airplay-2 support: If enabled, add and build its dependencies
+#   && if [ "${BUILD_AIRPLAY_VERSION}" -eq 2 ]; then \
+#     CONF_OPTIONS="${CONF_OPTIONS} --with-airplay-2" \
+#     && apk add --no-cache --upgrade ffmpeg libplist libsodium libgcrypt libuuid \
+#     && apk add --no-cache --upgrade --virtual .build-deps-airplay2 ffmpeg-dev libplist-dev libsodium-dev libgcrypt-dev xxd \
+#     && cd /app/build \
+#     && git clone https://github.com/mikebrady/nqptp.git nqptp.git \
+#     && cd nqptp.git \
+#     && autoreconf -fi \
+#     && ./configure \
+#     && make \
+#     && make install \
+#   ; fi \
+#   #
+#   # Build shairport-sync with metadata, stdout and pipe support (apk repo is without)
+#   && cd /app/build \
+#   && git clone https://github.com/mikebrady/shairport-sync.git shairport-sync.git \
+#   && cd shairport-sync.git \
+#   && autoreconf -i -f \
+#   && ./configure ${CONF_OPTIONS} \
+#   && make \
+#   && make install \
+#   #
+#   # Cleanup build environment
+#   && apk del --purge .build-deps \
+#   && if [ "${BUILD_AIRPLAY_VERSION}" -eq 2 ]; then apk del --purge .build-deps-airplay2; fi \
+#   && rm -rf /app/build \
   #
   # Configure dbus-daemon and avahi-daemon for rootless execution
   # Ref: https://gnaneshkunal.github.io/avahi-docker-non-root.html
-  && echo "<busconfig><listen>unix:path=/var/run/dbus/system_bus_socket</listen></busconfig>" > /usr/share/dbus-1/session.d/custom.conf \
+  RUN echo "<busconfig><listen>unix:path=/var/run/dbus/system_bus_socket</listen></busconfig>" > /usr/share/dbus-1/session.d/custom.conf \
   && mkdir -p /var/run/dbus \
   && chmod 777 /var/run/dbus/ \
   && chmod 777 /etc/avahi/avahi-daemon.conf \
@@ -77,19 +79,20 @@ RUN apk add --no-cache dbus popt openssl soxr avahi libconfig glib \
 # Build and install librespot (Spotify Client)
 # - Disable all audio out plugins, as they are not needed.
 FROM snapcast-airport AS snapcast-airport-spotify
-RUN mkdir -p /app/build \
-  && cd /app/build \
-  && apk add --no-cache --upgrade --virtual .build-deps git libconfig-dev cargo build-base cmake rust-bindgen clang18-dev \
-  && git clone -b master https://github.com/librespot-org/librespot.git librespot.git \
-  && cd librespot.git \
-  && cargo build --release --no-default-features --features with-avahi \
-  && cp ./target/release/librespot /usr/sbin/ \
-  && chmod +x /usr/sbin/librespot \
-  #
-  # Cleanup build environment
-  && cargo clean \
-  && apk del --purge .build-deps \
-  && rm -rf /app/build ~/.cargo
+RUN apk add --no-cache librespot
+# RUN mkdir -p /app/build \
+#   && cd /app/build \
+#   && apk add --no-cache --upgrade --virtual .build-deps git libconfig-dev cargo build-base cmake rust-bindgen clang18-dev \
+#   && git clone -b master https://github.com/librespot-org/librespot.git librespot.git \
+#   && cd librespot.git \
+#   && cargo build --release --no-default-features --features with-avahi \
+#   && cp ./target/release/librespot /usr/sbin/ \
+#   && chmod +x /usr/sbin/librespot \
+#   #
+#   # Cleanup build environment
+#   && cargo clean \
+#   && apk del --purge .build-deps \
+#   && rm -rf /app/build ~/.cargo
 
 
 ###
