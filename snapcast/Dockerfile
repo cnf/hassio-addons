@@ -1,7 +1,9 @@
 ARG BUILD_FROM
-FROM $BUILD_FROM AS snapcast
-# FROM ghcr.io/hassio-addons/base:stable AS snapcast
+# FROM $BUILD_FROM AS snapcast
+FROM ghcr.io/hassio-addons/base:stable AS snapcast
 
+RUN echo "@testing https://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
+  && apk update
 # Install snapcast-server and snapweb
 RUN apk add --no-cache --upgrade snapcast-server \
   # Install latest release of snapweb
@@ -79,7 +81,7 @@ RUN apk add --no-cache dbus avahi shairport-sync
 # Build and install librespot (Spotify Client)
 # - Disable all audio out plugins, as they are not needed.
 FROM snapcast-airport AS snapcast-airport-spotify
-RUN apk add --no-cache librespot
+RUN apk add --no-cache librespot@testing
 # RUN mkdir -p /app/build \
 #   && cd /app/build \
 #   && apk add --no-cache --upgrade --virtual .build-deps git libconfig-dev cargo build-base cmake rust-bindgen clang18-dev \
