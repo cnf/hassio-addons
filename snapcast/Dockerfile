@@ -1,6 +1,6 @@
 ARG BUILD_FROM
-# FROM $BUILD_FROM AS snapcast
-FROM ghcr.io/hassio-addons/base:stable AS snapcast
+FROM $BUILD_FROM AS snapcast
+# FROM ghcr.io/hassio-addons/base:stable AS snapcast
 
 # Install snapcast-server and snapweb
 RUN apk add --no-cache --upgrade snapcast-server \
@@ -14,9 +14,6 @@ RUN apk add --no-cache --upgrade snapcast-server \
 # Expose Ports
 ## Snapcast Ports: 1704-1705 1780
 EXPOSE 1704-1705 1780
-
-# ENTRYPOINT [ "/usr/bin/snapserver" ]
-
 
 ###
 # Airplay with Shairport-Sync
@@ -101,76 +98,23 @@ FROM snapcast-airport-spotify AS snapcast-extended
 
 ENV TZ "Etc/UTC"
 
-# ENV PIPE_CONFIG_ENABLED "0"
-# ENV PIPE_SOURCE_NAME "Pipe"
-# ENV PIPE_PATH "/tmp/snapfifo"
-# ENV PIPE_MODE "create"
-# ENV PIPE_EXTRA_ARGS ""
-
-# ENV AIRPLAY_CONFIG_ENABLED "1"
-# ENV AIRPLAY_SOURCE_NAME "Airplay"
-# ENV AIRPLAY_DEVICE_NAME "Snapcast"
-# ENV AIRPLAY_EXTRA_ARGS ""
-
-# ENV SPOTIFY_CONFIG_ENABLED "0"
-# ENV SPOTIFY_SOURCE_NAME "Spotify"
-# ENV SPOTIFY_ACCESS_TOKEN ""
-# ENV SPOTIFY_DEVICE_NAME "Snapcast"
-# ENV SPOTIFY_BITRATE "320"
-# ENV SPOTIFY_EXTRA_ARGS ""
-
-# ENV META_CONFIG_ENABLED "0"
-# ENV META_SOURCE_NAME "Mix"
-# ENV META_SOURCES ""
-# ENV META_EXTRA_ARGS ""
-
-# ENV SOURCE_CUSTOM ""
-
-# ENV NGINX_ENABLED "0"
-# ENV NGINX_SKIP_CERT_GENERATION "0"
-# ENV NGINX_HTTPS_PORT "443"
-
-
 # Install and build steps
 # - install shairport-sync runtime dependencies
 # - build shairport sync
 # - build librespot
 # - install nginx
-RUN apk add --no-cache --upgrade tzdata curl \
-  && mkdir -p /app/config /app/data /app/certs/ \
-  #
-  # Install NGINX for SSL reverse proxy to webinterface
-  && apk add --no-cache --upgrade nginx \
-  && mkdir -p /run/nginx/  \
-  && chown -R snapcast:snapcast /var/lib/nginx /var/log /usr/lib/nginx /run/nginx /app/certs \
-  && chown -R snapcast:snapcast /app
-  #
-  # Create configuration and environment for supervisord
-  # && mkdir -p /app/supervisord /run/supervisord \
-  # && cp /etc/supervisord.conf /app/supervisord/supervisord.conf \
-  # && sed -i 's/^files =.*/files = \/app\/supervisord\/*.ini/g' /app/supervisord/supervisord.conf \
-  # && sed -i 's/\/run\/supervisord.sock/\/run\/supervisord\/supervisord.sock/g' /app/supervisord/supervisord.conf \
-  # && chown -R snapcast:snapcast /run/supervisord /app/supervisord \
-  # RUN mkdir -p /etc/services.d/dbus \
-  # && mkdir -p /etc/services.d/avahi \
-  # && mkdir -p /etc/services.d/snapserver \
-  # && mkdir -p /etc/services.d/nginx \
-  # && ls /etc/services.d/ \
-  # && echo -e "#!/command/execlineb -P\nfdmove -c 2 1\ndbus-daemon --session" > /etc/services.d/dbus/run \
-  # && echo -e "#!/command/execlineb -P\nfdmove -c 2 1\navahi-daemon --no-drop-root" > /etc/services.d/avahi/run \
-  # && echo -e "#!/command/execlineb -P\nfdmove -c 2 1\nsnapserver -c /app/config/snapserver.conf --server.datadir=/app/data" > /etc/services.d/snapserver/run \
-  # && echo -e "#!/command/execlineb -P\nfdmove -c 2 1\nnginx -g 'daemon off;'" > /etc/services.d/nginx/run \
-  # #
-  # # Configure app directory owner
-  # && chmod -R 777 /etc/services.d/* \
-
+# RUN apk add --no-cache --upgrade tzdata curl \
+#   && mkdir -p /app/config /app/data /app/certs/ \
+#   #
+#   # Install NGINX for SSL reverse proxy to webinterface
+#   && apk add --no-cache --upgrade nginx \
+#   && mkdir -p /run/nginx/  \
+#   && chown -R snapcast:snapcast /var/lib/nginx /var/log /usr/lib/nginx /run/nginx /app/certs \
+#   && chown -R snapcast:snapcast /app
 
 COPY etc /etc
 RUN chmod +x /etc/services.d/**/* \
 && chmod +x /etc/cont-init.d/*
-
-# Add supervisord configuration
-# ADD --chown=snapcast:snapcast config/supervisord/supervisord.ini /app/supervisord/snapcast.ini
 
 # Add NGINX configuration
 # ADD nginx.conf /etc/nginx/http.d/default.conf
@@ -181,7 +125,7 @@ RUN chmod +x /etc/services.d/**/* \
 # ADD --chown=snapcast:snapcast --chmod=0775 healthcheck.sh /app/healthcheck.sh
 
 # USER snapcast:snapcast
-# WORKDIR /app
+
 VOLUME [ "/app/config", "/app/data", "/app/certs" ]
 
 # HEALTHCHECK CMD [ "/bin/sh", "/app/healthcheck.sh" ]
@@ -194,9 +138,6 @@ VOLUME [ "/app/config", "/app/data", "/app/certs" ]
 ### AirPlay-2 ports:  3689/tcp 5000/tcp 6000-6009/udp 7000/tcp for airplay, 319-320/udp for NQPTP
 ### Avahi ports:      5353
 ## NGINX ports:      443 or user defined
-EXPOSE 1704-1705 1780 3689 5000 6000-6009/udp 7000 319-320/udp 5353 "${NGINX_HTTPS_PORT}"
+EXPOSE 1704-1705 1780 4953 3689 5000 6000-6009/udp 7000 319-320/udp 5353 1788
 
 ENTRYPOINT ["/init"]
-# Run start script
-# ENTRYPOINT [ "/bin/sh", "-c" ]
-# CMD [ "/app/setup.sh && /usr/bin/supervisord -c /app/supervisord/supervisord.conf" ]
