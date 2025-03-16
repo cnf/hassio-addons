@@ -11,7 +11,7 @@ arch:
 startup: application
 # init: false
 legacy: true
-watchdog: http://[HOST]:[PORT:2019]/metrics
+# watchdog: http://[HOST]:[PORT:2019]/metrics
 webui: "[PROTO:option_name]://[HOST]:[PORT:80]"
 map:
   - type: ssl
