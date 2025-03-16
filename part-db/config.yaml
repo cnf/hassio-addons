@@ -1,0 +1,56 @@
+name: "Part-DB Server"
+version: v1.16.1
+description: "Part-DB is an Open-Source inventory management system for your electronic components. It is installed on a web server and so can be accessed with any browser without the need to install additional software."
+url: "https://docs.part-db.de/"
+slug: "partdb"
+arch:
+  - aarch64
+  - amd64
+  - armv7
+
+startup: application
+# init: false
+legacy: true
+watchdog: http://[HOST]:[PORT:2019]/metrics
+webui: "[PROTO:option_name]://[HOST]:[PORT:80]"
+map:
+  - type: ssl
+    read_only: true
+  - type: addon_config
+    read_only: false
+    path: /var/www/html/config
+  - type: data
+    read_only: false
+    path: /var/www/html/var/db
+  - type: share
+    read_only: false
+    path: /var/www/html/uploads
+  - type: backup
+    read_only: false
+boot: auto
+ports:
+  80/tcp: 8070
+  443/tcp: 8470
+  443/udp: 8470
+ports-description:
+  80/tcp: "Web interface"
+  443/tcp: "Web interface"
+  443/udp: "Web interface"
+  2019/tcp: "health check"
+environment:
+options:
+  spotify_enabled: 1
+  spotify_source_name: "Spotify"
+  spotify_device_name: "Snapcast"
+  spotify_bitrate: 320
+  server_datadir: "/usr/share/snapserver/snapweb"
+  initial_volume: 100
+schema:
+  spotify_enabled: bool
+  spotify_source_name: str
+  spotify_device_name: str
+  spotify_bitrate: int
+  server_datadir: str
+  initial_volume: int
+image: jbtronics/part-db1
+backup: hot
