@@ -7,9 +7,8 @@ arch:
   - aarch64
   - amd64
   - armv7
-
 startup: application
-# init: false
+init: true
 legacy: true
 # watchdog: http://[HOST]:[PORT:2019]/metrics
 webui: "[PROTO:option_name]://[HOST]:[PORT:80]"
@@ -18,13 +17,14 @@ map:
     read_only: true
   - type: addon_config
     read_only: false
-    path: /var/www/html/config
+    path: /var/www/html/var/db
   - type: data
     read_only: false
-    path: /var/www/html/var/db
+    path: /var/www/html/var/upload
   - type: share
     read_only: false
-    path: /var/www/html/uploads
+  #   path: /var/www/html/uploads
+  - type: addons
   - type: backup
     read_only: false
 boot: auto
