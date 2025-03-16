@@ -20,13 +20,6 @@ map:
     path: /var/www/html/var/db
   - type: data
     read_only: false
-    path: /var/www/html/var/upload
-  - type: share
-    read_only: false
-  #   path: /var/www/html/uploads
-  - type: addons
-  - type: backup
-    read_only: false
 boot: auto
 ports:
   80/tcp: 8070
@@ -41,23 +34,53 @@ environment:
   DATABASE_URL: "sqlite:///%kernel.project_dir%/var/db/app.db"
   APP_ENV: docker
   ALLOW_ATTACHMENT_DOWNLOADS: "1"
-  USE_GRAVATAR: "1"
+options:
+  USE_GRAVATAR: 1
+  PROVIDER_LCSC_ENABLED: 1
+  PROVIDER_REICHELT_ENABLED: 1
+  PROVIDER_POLLIN_ENABLED: 1
+schema:
+  TRUSTED_PROXIES: match(^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$)?
+  DEFAULT_URI: url?
+  USE_GRAVATAR: int(0,1)
   PROVIDER_LCSC_ENABLED: "1"
   PROVIDER_REICHELT_ENABLED: "1"
   PROVIDER_POLLIN_ENABLED: "1"
-options:
-  USE_GRAVATAR: true
-  # PROVIDER_DIGIKEY_CLIENT_ID:
-  # PROVIDER_DIGIKEY_CLIENT_SECRET:
-  # PROVIDER_DIGIKEY_COUNTRY:
-  # PROVIDER_MOUSER_KEY:
-  # PROVIDER_OEMSECRETS_KEY:
-schema:
-  USE_GRAVATAR: bool
+
   PROVIDER_DIGIKEY_CLIENT_ID: str?
   PROVIDER_DIGIKEY_CLIENT_SECRET: str?
   PROVIDER_DIGIKEY_COUNTRY: str?
+
+  PROVIDER_TME_KEY: str?
+  PROVIDER_TME_SECRET: str?
+  PROVIDER_TME_COUNTRY: str?
+
+  PROVIDER_ELEMENT14_KEY: str?
+  PROVIDER_ELEMENT14_STORE_ID: str?
+
   PROVIDER_MOUSER_KEY: str?
+  PROVIDER_MOUSER_SEARCH_LIMIT: int(1,50)?
+
   PROVIDER_OEMSECRETS_KEY: str?
+  PROVIDER_OEMSECRETS_COUNTRY_CODE: str?
+  PROVIDER_OEMSECRETS_ZERO_PRICE: int(0,1)?
+  PROVIDER_OEMSECRETS_SET_PARAM: int(0,1)?
+
+  PROVIDER_OCTOPART_CLIENT_ID: str?
+  PROVIDER_OCTOPART_SECRET: str?
+  PROVIDER_OCTOPART_COUNTRY: str?
+  PROVIDER_OCTOPART_SEARCH_LIMIT: int(1,100)?
+  PROVIDER_OCTOPART_ONLY_AUTHORIZED_SELLERS: bool?
+
+  FIXER_API_KEY: str?
+  BANNER: str?
 image: jbtronics/part-db1
 backup: hot
+backup_pre: |
+  #!/bin/bash
+  php /var/www/html/bin/console partdb:attachments:clean-unused
+  php /var/www/html/bin/console cache:clear
+  php /var/www/html/bin/console partdb:backup --full /data/Part-DB_backup.zip
+backup_post: |
+  #!/bin/bash
+  # rm /data/Part-DB_backup.zip
