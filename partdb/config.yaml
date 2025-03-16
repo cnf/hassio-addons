@@ -38,6 +38,8 @@ ports-description:
   443/udp: "Web interface"
   2019/tcp: "health check"
 environment:
+  DATABASE_URL: "sqlite:///%kernel.project_dir%/var/db/app.db"
+  APP_ENV: docker
   ALLOW_ATTACHMENT_DOWNLOADS: "1"
   USE_GRAVATAR: "1"
   PROVIDER_LCSC_ENABLED: "1"
