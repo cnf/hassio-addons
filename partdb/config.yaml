@@ -38,19 +38,28 @@ ports-description:
   443/udp: "Web interface"
   2019/tcp: "health check"
 environment:
+  - ALLOW_ATTACHMENT_DOWNLOADS: 1
+  - USE_GRAVATAR: 1
+  - PROVIDER_LCSC_ENABLED: 1
+  - PROVIDER_REICHELT_ENABLED: 1
+  - PROVIDER_POLLIN_ENABLED: 1
 options:
-  spotify_enabled: 1
-  spotify_source_name: "Spotify"
-  spotify_device_name: "Snapcast"
-  spotify_bitrate: 320
-  server_datadir: "/usr/share/snapserver/snapweb"
-  initial_volume: 100
+  PROVIDER_DIGIKEY_CLIENT_ID: null
+  PROVIDER_DIGIKEY_CLIENT_SECRET: null
+  PROVIDER_MOUSER_CLIENT_ID: null
+  PROVIDER_MOUSER_CLIENT_SECRET: null
+  PROVIDER_OCTOPART_CLIENT_ID: null
+  PROVIDER_OCTOPART_CLIENT_SECRET: null
+  PROVIDER_SNAPCRAFT_CLIENT_ID: null
+  PROVIDER_SNAPCRAFT_CLIENT_SECRET: null
 schema:
-  spotify_enabled: bool
-  spotify_source_name: str
-  spotify_device_name: str
-  spotify_bitrate: int
-  server_datadir: str
-  initial_volume: int
+  PROVIDER_DIGIKEY_CLIENT_ID: str?
+  PROVIDER_DIGIKEY_CLIENT_SECRET: str?
+  PROVIDER_MOUSER_CLIENT_ID: str?
+  PROVIDER_MOUSER_CLIENT_SECRET: str?
+  PROVIDER_OCTOPART_CLIENT_ID: str?
+  PROVIDER_OCTOPART_CLIENT_SECRET: str?
+  PROVIDER_SNAPCRAFT_CLIENT_ID: str?
+  PROVIDER_SNAPCRAFT_CLIENT_SECRET: str
 image: jbtronics/part-db1
 backup: hot
