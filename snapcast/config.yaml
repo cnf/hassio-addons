@@ -1,5 +1,5 @@
 name: "Snapcast Server"
-version: dev
+version: dev-2025-03-19
 description: "A Snapcast Server with Spotify and Airplay"
 url: "https://github.com/badaix/snapcast"
 slug: "snapserver"
