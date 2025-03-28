@@ -1,5 +1,5 @@
 name: "Part-DB Server"
-version: v1.16.1-p1
+version: v1.16.1
 description: "Part-DB is an Open-Source inventory management system for your electronic components. It is installed on a web server and so can be accessed with any browser without the need to install additional software."
 url: "https://docs.part-db.de/"
 slug: "partdb"
@@ -77,7 +77,7 @@ schema:
 
   FIXER_API_KEY: str?
   BANNER: str?
-image: jbtronics/part-db1:master
+image: jbtronics/part-db1
 backup: hot
 backup_pre: |
   #!/bin/bash
