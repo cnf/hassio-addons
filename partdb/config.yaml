@@ -20,6 +20,12 @@ map:
     read_only: false
     path: /var/www/html/var/db
   - type: data
+    path: /var/www/html/public/media
+    read_only: false
+  - type: share
+    path: /var/www/html/uploads
+    read_only: false
+  - type: backup
     read_only: false
 boot: auto
 ports:
@@ -84,7 +90,7 @@ backup_pre: |
   #!/bin/bash
   php /var/www/html/bin/console partdb:attachments:clean-unused
   php /var/www/html/bin/console cache:clear
-  php /var/www/html/bin/console partdb:backup --full /data/Part-DB_backup.zip
+  php /var/www/html/bin/console partdb:backup --full /backup/Part-DB_backup.zip
 backup_post: |
   #!/bin/bash
-  # rm /data/Part-DB_backup.zip
+  # rm /backup/Part-DB_backup.zip
