@@ -1,0 +1,17 @@
+#!/command/with-contenv bashio
+# shellcheck shell=bash
+
+STAYUP=$(bashio::config 'Stay_up')
+RESTORE=$(bashio::config 'restore')
+
+# Save iptables rules
+iptables-save > /data/iptables/save.v4 || true
+ip6tables-save > /data/iptables/save.v6 || true
+                          
+if [ "$STAYUP" == "true" ] && [ "$RESTORE" == "true" ]; then
+  for T in filter nat mangle raw security; do
+    iptables -t $T -F || true
+    ip6tables -t $T -X || true
+  done
+fi
+true

@@ -1,0 +1,34 @@
+#!/command/with-contenv bashio
+# shellcheck shell=bash
+
+STAYUP=$(bashio::config 'Stay_up')
+RESTORE=$(bashio::config 'restore')
+
+RULES=/addon_config/rules
+if [ -f $RULES.v4 ]; then
+  file=$(cat $RULES.v4)
+  for line in $file
+  do
+    iptables $line || true
+  done
+fi
+
+if [ -f $RULES.v6 ]; then
+  file=$(cat $RULES.v6)
+  for line in $file
+  do
+    ip6tables $line || true
+  done
+fi
+
+SAVE=/data/iptables/save
+if [ "$RESTORE" == "true" ]; then
+  [ -f $SAVE.v4 ] && iptables-restore $SAVE.v4
+  [ -f $SAVE.v6 ] && ip6tables-restore $SAVE.v6
+fi
+
+if [ "$STAYUP" != "true" ]; then
+  /run/s6/basedir/bin/halt
+else
+  true
+fi

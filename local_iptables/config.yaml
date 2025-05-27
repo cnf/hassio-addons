@@ -1,0 +1,29 @@
+name: Iptables
+description: Apply iptables rules
+version: 1.0.4
+slug: iptables
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+host_network: true
+map:
+  - type: addon_config
+    read_only: true
+privileged:
+  - NET_ADMIN
+options:
+  restore: false
+  Stay_up: true
+schema:
+  restore:
+    type: bool
+    default: false
+    description: Restore iptables rules on container start, flush rules on container stop
+  Stay_up:
+    type: bool
+    default: true
+    description: Keep the container running to maintain iptables rules
