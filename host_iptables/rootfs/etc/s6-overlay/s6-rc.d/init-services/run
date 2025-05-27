@@ -23,8 +23,12 @@ fi
 
 SAVE=/data/iptables/save
 if [ "$RESTORE" == "true" ]; then
-  [ -f $SAVE.v4 ] && iptables-restore $SAVE.v4
-  [ -f $SAVE.v6 ] && ip6tables-restore $SAVE.v6
+  if [ -f $SAVE.v4 ]; then
+    iptables-restore $SAVE.v4 || true
+  fi
+  if [ -f $SAVE.v6 ]; then
+    ip6tables-restore $SAVE.v6 || true
+  fi
 fi
 
 if [ "$STAYUP" != "true" ]; then
