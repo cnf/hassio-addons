@@ -19,11 +19,5 @@ options:
   restore: false
   Stay_up: true
 schema:
-  restore:
-    type: bool
-    default: false
-    description: Restore iptables rules on container start, flush rules on container stop
-  Stay_up:
-    type: bool
-    default: true
-    description: Keep the container running to maintain iptables rules
+  restore: bool
+  Stay_up: bool
