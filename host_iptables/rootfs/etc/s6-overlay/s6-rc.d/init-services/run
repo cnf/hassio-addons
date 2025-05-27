@@ -12,6 +12,8 @@ if [ ! -d /data/iptables/ ]; then
 fi
 
 RULES=/config/rules
+
+IFS=$'\n'
 if [ -f $RULES.v4 ]; then
   bashio::log.info "Loading v4 rules"
   file=$(cat $RULES.v4)
@@ -31,6 +33,7 @@ if [ -f $RULES.v6 ]; then
     bashio::log.info "ip6tables $line"
   done
 fi
+unset IFS
 
 SAVE=/data/iptables/save
 if [ "$RESTORE" == "true" ]; then
