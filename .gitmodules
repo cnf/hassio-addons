@@ -1,3 +1,0 @@
-[submodule "local_iptables"]
-	path = local_iptables
-	url = https://github.com/niryeffet/hassio_addon_local_iptables
