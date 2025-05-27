@@ -11,7 +11,7 @@ if [ ! -d /data/iptables/ ]; then
   mkdir /data/iptables
 fi
 
-RULES=/addon_config/rules
+RULES=/config/rules
 if [ -f $RULES.v4 ]; then
   bashio::log.info "Loading v4 rules"
   file=$(cat $RULES.v4)
