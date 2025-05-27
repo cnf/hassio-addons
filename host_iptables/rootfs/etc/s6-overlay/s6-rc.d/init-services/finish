@@ -5,11 +5,13 @@ STAYUP=$(bashio::config 'Stay_up')
 RESTORE=$(bashio::config 'restore')
 
 # Save iptables rules
+echo "Saving rules"
 iptables-save > /data/iptables/save.v4 || true
 ip6tables-save > /data/iptables/save.v6 || true
                           
 if [ "$STAYUP" == "true" ] && [ "$RESTORE" == "true" ]; then
   for T in filter nat mangle raw security; do
+    echo "Flushing $T"
     iptables -t $T -F || true
     ip6tables -t $T -X || true
   done

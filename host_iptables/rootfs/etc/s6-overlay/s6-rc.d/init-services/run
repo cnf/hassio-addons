@@ -4,12 +4,17 @@
 STAYUP=$(bashio::config 'Stay_up')
 RESTORE=$(bashio::config 'restore')
 
+if [ ! -d /data/iptables/ ]; then
+  mkdir /data/iptables
+fi
+
 RULES=/addon_config/rules
 if [ -f $RULES.v4 ]; then
   file=$(cat $RULES.v4)
   for line in $file
   do
     iptables $line || true
+    echo "iptables $line"
   done
 fi
 
@@ -18,15 +23,18 @@ if [ -f $RULES.v6 ]; then
   for line in $file
   do
     ip6tables $line || true
+    echo "ip6tables $line"
   done
 fi
 
 SAVE=/data/iptables/save
 if [ "$RESTORE" == "true" ]; then
   if [ -f $SAVE.v4 ]; then
+    echo "restoring v4"
     iptables-restore $SAVE.v4 || true
   fi
   if [ -f $SAVE.v6 ]; then
+    echo "restoring v6"
     ip6tables-restore $SAVE.v6 || true
   fi
 fi
