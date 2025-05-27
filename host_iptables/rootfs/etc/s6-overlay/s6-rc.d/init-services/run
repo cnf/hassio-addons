@@ -7,11 +7,13 @@ STAYUP=$(bashio::config 'Stay_up')
 RESTORE=$(bashio::config 'restore')
 
 if [ ! -d /data/iptables/ ]; then
+  bashio::log.info "Creating /data/iptables directory"
   mkdir /data/iptables
 fi
 
 RULES=/addon_config/rules
 if [ -f $RULES.v4 ]; then
+  bashio::log.info "Loading v4 rules"
   file=$(cat $RULES.v4)
   for line in $file
   do
@@ -21,6 +23,7 @@ if [ -f $RULES.v4 ]; then
 fi
 
 if [ -f $RULES.v6 ]; then
+  bashio::log.info "Loading v6 rules"
   file=$(cat $RULES.v6)
   for line in $file
   do
