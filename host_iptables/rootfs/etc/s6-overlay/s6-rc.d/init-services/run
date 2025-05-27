@@ -16,22 +16,24 @@ RULES=/config/rules
 IFS=$'\n'
 if [ -f $RULES.v4 ]; then
   bashio::log.info "Loading v4 rules"
-  file=$(cat $RULES.v4)
-  for line in $file
-  do
-    iptables $line || true
-    bashio::log.info "iptables $line"
-  done
+  cat $RULES.v4 |xargs iptables -v
+  # file=$(cat $RULES.v4)
+  # for line in $file
+  # do
+  #   iptables $line || true
+  #   bashio::log.info "iptables $line"
+  # done
 fi
 
 if [ -f $RULES.v6 ]; then
   bashio::log.info "Loading v6 rules"
-  file=$(cat $RULES.v6)
-  for line in $file
-  do
-    ip6tables $line || true
-    bashio::log.info "ip6tables $line"
-  done
+  cat $RULES.v6 |xargs ip6tables -v
+  # file=$(cat $RULES.v6)
+  # for line in $file
+  # do
+  #   ip6tables $line || true
+  #   bashio::log.info "ip6tables $line"
+  # done
 fi
 unset IFS
 
