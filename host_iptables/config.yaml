@@ -1,6 +1,6 @@
-name: Iptables
+name: Host Iptables
 description: Apply iptables rules
-version: 1.0.5
+version: 1.0
 slug: iptables
 init: false
 arch:
