@@ -88,12 +88,13 @@ image: jbtronics/part-db1
 backup: hot
 backup_pre: |
   #!/bin/bash
-  php /var/www/html/bin/console partdb:attachments:clean-unused 2>&1 > /dev/null
-  php /var/www/html/bin/console cache:clear
-  php /var/www/html/bin/console partdb:backup --full /backup/partdb/Part-DB_backup.zip
+  su -s /bin/sh  www-data -c 'php /var/www/html/bin/console partdb:attachments:clean-unused 2>&1 > /dev/null'
+  su -s /bin/sh  www-data -c 'php /var/www/html/bin/console cache:clear'
+  su -s /bin/sh  www-data -c 'php /var/www/html/bin/console partdb:backup --full /backup/partdb/Part-DB_backup.zip'
 backup_post: |
   #!/bin/bash
   # rm /backup/partdb/Part-DB_backup.zip
+
 
 
 
