@@ -86,19 +86,8 @@ schema:
   BANNER: str?
 image: jbtronics/part-db1
 backup: hot
-backup_pre: |
-  #!/bin/bash
-  exec &> /proc/1/fd/1
-  echo "PartDB Backup started"
-  rm /backup/partdb/Part-DB_backup.zip
-  su -s /bin/sh  www-data -c 'php /var/www/html/bin/console partdb:attachments:clean-unused 2>&1 > /dev/null'
-  su -s /bin/sh  www-data -c 'php /var/www/html/bin/console cache:clear'
-  su -s /bin/sh  www-data -c 'php /var/www/html/bin/console partdb:backup --full /backup/partdb/Part-DB_backup.zip'
-backup_post: |
-  #!/bin/bash
-  exec &> /proc/1/fd/1
-  echo "PartDB Backup completed"
-  date > /backup/partdb/post
+backup_pre: /backup/partdb/backup-pre.sh
+backup_post: /backup/partdb/backup-post.sh
 
 
 
