@@ -42,6 +42,7 @@ environment:
   APP_ENV: docker
   ALLOW_ATTACHMENT_DOWNLOADS: "1"
 options:
+  TRUSTED_PROXIES: 172.32.0.0/23
 schema:
   TRUSTED_PROXIES: str?
   TRUSTED_HOSTS: str?
@@ -50,6 +51,7 @@ image: jbtronics/part-db1
 backup: hot
 backup_pre: /backup/partdb/backup-pre.sh
 backup_post: /backup/partdb/backup-post.sh
+
 
 
 
