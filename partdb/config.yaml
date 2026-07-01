@@ -47,6 +47,7 @@ schema:
   TRUSTED_PROXIES: str?
   TRUSTED_HOSTS: str?
   DEFAULT_URI: url?
+  APP_SECRET: str?
 image: jbtronics/part-db1
 backup: hot
 backup_pre: /backup/partdb/backup-pre.sh
